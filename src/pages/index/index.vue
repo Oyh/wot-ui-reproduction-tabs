@@ -8,12 +8,14 @@ definePage({
 
 const active = ref(0)
 const width = ref(0)
+const viewport = ref(0)
 
 // 只用于观察：H5 下把 tabs 的实际宽度读出来
 function measure() {
   // #ifdef H5
   const el = document.querySelector('.wd-tabs')
   width.value = el ? Math.round(el.getBoundingClientRect().width) : 0
+  viewport.value = window.innerWidth
   // #endif
 }
 
@@ -30,10 +32,10 @@ onMounted(() => {
     </view>
     <view class="wot-px-extra-loose wot-pb-loose wot-text-label-main wot-text-text-auxiliary">
       <!-- #ifdef H5 -->
-      .wd-tabs 宽度：{{ width }}px
+      .wd-tabs 宽度 {{ width }}px，视口宽 {{ viewport }}px
       <!-- #endif -->
       <!-- #ifndef H5 -->
-      H5 下会显示 tabs 的实际宽度，小程序端看页签行是否变宽、页面能否左右拖动
+      H5 下会显示 tabs 的实际宽度与视口宽，小程序端看页签行是否变宽、页面能否左右拖动
       <!-- #endif -->
     </view>
 

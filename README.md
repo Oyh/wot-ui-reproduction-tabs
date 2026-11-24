@@ -1,6 +1,6 @@
 # wd-tabs sticky + animated 宽度累加
 
-`wd-tabs` 同时开启 `sticky` 和 `animated` 时，访问过的页签越多，tabs 自身宽度越大，最终超出视口，页面出现横向滚动。
+`wd-tabs` 同时开启 `sticky` 和 `animated` 时，访问过的页签越多，tabs 自身宽度越大，直到超过视口，页面出现横向滚动。
 
 - Wot UI 2.4.0，2.3.2 上表现一致
 - 平台：H5、微信小程序，两端都复现
@@ -28,9 +28,13 @@ pnpm dev:mp-weixin   # 产物在 dist/dev/mp-weixin，导入微信开发者工�
 
 ## 复现步骤
 
-1. 视口宽度 402px 打开首页
+1. 打开首页，把浏览器视口调成手机宽度
 2. **依次**点击每个页签，必须按顺序；跳着点不会触发，没访问过的页签不会渲染
-3. 观察页面上那行宽度读数，或者读 `document.querySelector('.wd-tabs').getBoundingClientRect().width`
+3. 看页面上那行读数，前半是 tabs 的实际宽度，后半是视口宽。开始时两个数字相等，点着点着前一个就超过后一个
+
+只开 `sticky` 或只开 `animated` 时，前半始终等于后半。
+
+视口 402px 时量到的读数：
 
 | 已访问页签数 | `.wd-tabs` 宽度 |
 | --- | --- |
@@ -40,14 +44,14 @@ pnpm dev:mp-weixin   # 产物在 dist/dev/mp-weixin，导入微信开发者工�
 | 7 | 672 |
 | 8 | 768 |
 
-从第 5 个页签起，每多访问一页 +96px，`document.documentElement.scrollWidth` 同步变大，页面可以横向拖动。
+视口宽度不同，具体数值跟着变，结论一样：一旦超过视口，未访问的页签每多访问一个就继续加宽，`document.documentElement.scrollWidth` 同步变大，页面可以横向拖动。
 
-期望：切换页签时宽度始终保持 402px。
+期望：切换页签时 tabs 宽度始终等于视口宽，页面不出现横向滚动。
 
 ## 对照
 
-- 只开 `sticky`、不开 `animated`：宽度恒为 402
-- 只开 `animated`、不开 `sticky`：宽度恒为 402
+- 只开 `sticky`、不开 `animated`：宽度恒为视口宽
+- 只开 `animated`、不开 `sticky`：宽度恒为视口宽
 - 两者同时开：出现上面的增长
 
 宽度增长发生在 `wd-sticky-box` 内部由 `wd-resize` 渲染的 `.wd-resize__container` 上，那是一个 `position: absolute` 的收缩宽容器，`.wd-tabs` 宽度与其一致。
