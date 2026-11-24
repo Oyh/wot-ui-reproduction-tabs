@@ -28,7 +28,7 @@ onMounted(() => {
 <template>
   <view>
     <view class="wot-p-extra-loose wot-text-label-main wot-text-text-secondary">
-      依次点击下面的页签，观察这行宽度读数
+      多点几个页签，观察这行读数
     </view>
     <view class="wot-px-extra-loose wot-pb-loose wot-text-label-main wot-text-text-auxiliary">
       <!-- #ifdef H5 -->
